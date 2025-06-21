@@ -7,6 +7,13 @@
     "documentation": "https://github.com/doctorexitus/ha-fals22",
     "iot_class": "local_polling",
     "issue_tracker": "https://github.com/doctorexitus/ha-fals22/issues",
-    "requirements": [],
+    "platforms": [
+        "sensor",
+        "switch", 
+        "number"
+    ],
+    "requirements": [
+        "aiohttp"
+    ],
     "version": "1.0.0"
   }
