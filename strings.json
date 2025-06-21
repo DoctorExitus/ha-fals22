@@ -1,0 +1,31 @@
+{
+    "config": {
+      "step": {
+        "user": {
+          "title": "FALS22 Dewpoint Ventilation",
+          "description": "Configure your FALS22 dewpoint ventilation system",
+          "data": {
+            "host": "IP Address",
+            "password": "Password (optional)"
+          }
+        }
+      },
+      "error": {
+        "cannot_connect": "Failed to connect to device",
+        "invalid_auth": "Invalid authentication",
+        "invalid_data": "Invalid response from device",
+        "unknown": "Unexpected error occurred"
+      },
+      "abort": {
+        "already_configured": "Device is already configured"
+      }
+    },
+    "options": {
+      "step": {
+        "init": {
+          "title": "FALS22 Options",
+          "description": "Configure integration options"
+        }
+      }
+    }
+  }
