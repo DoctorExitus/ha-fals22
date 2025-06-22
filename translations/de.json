@@ -65,7 +65,7 @@
     },
     "switch": {
       "manual_mode": {
-        "name": "Manuelle Lüftung"
+        "name": "Manueller Modus (30 Min.)"
       },
       "keylock": {
         "name": "Tastensperre"
