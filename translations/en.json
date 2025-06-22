@@ -65,7 +65,7 @@
     },
     "switch": {
       "manual_mode": {
-        "name": "Manual Ventilation"
+        "name": "Manual Mode (30 min.)"
       },
       "keylock": {
         "name": "Keylock"
