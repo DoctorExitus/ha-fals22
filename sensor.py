@@ -11,7 +11,8 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, MANUFACTURER, MODEL, SENSOR_TYPES
+from .const import DOMAIN, SENSOR_TYPES
+from .device_helper import get_device_info, get_entity_name_prefix
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,6 +49,9 @@ class FALS22Sensor(CoordinatorEntity, SensorEntity):
         self._config_entry = config_entry
         self._sensor_type = sensor_type
         self._sensor_config = sensor_config
+        
+        # Generate entity ID based on device name
+        entity_prefix = get_entity_name_prefix(config_entry)
         self._attr_unique_id = f"{config_entry.entry_id}_{sensor_type}"
         
         # Set translation key for localization
@@ -67,14 +71,7 @@ class FALS22Sensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device info."""
-        return DeviceInfo(
-            identifiers={(DOMAIN, self._config_entry.entry_id)},
-            name="FALS22 Dewpoint Ventilation",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            sw_version="6.0+",
-            configuration_url=f"http://{self._config_entry.data['host']}",
-        )
+        return get_device_info(self._config_entry)
 
     @property
     def native_value(self) -> Any:
