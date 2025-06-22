@@ -16,7 +16,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN
+from .const import DOMAIN, DEFAULT_SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -94,6 +94,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         schema=UPDATE_MULTIPLE_SETTINGS_SCHEMA,
     )
 
+    # Set up options update listener
+    entry.async_on_unload(entry.add_update_listener(update_listener))
+
     return True
 
 
@@ -110,6 +113,17 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unload_ok
 
 
+async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Update listener for options changes."""
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+    
+    # Update the polling interval
+    scan_interval = entry.options.get("scan_interval", DEFAULT_SCAN_INTERVAL)
+    coordinator.update_interval = timedelta(seconds=scan_interval)
+    
+    _LOGGER.debug("Updated scan interval to %s seconds", scan_interval)
+
+
 class FALS22DataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the FALS22 API."""
 
@@ -121,11 +135,14 @@ class FALS22DataUpdateCoordinator(DataUpdateCoordinator):
         self.password = entry.data.get("password")
         self.session = async_get_clientsession(hass)
 
+        # Get scan interval from options or use default
+        scan_interval = entry.options.get("scan_interval", DEFAULT_SCAN_INTERVAL)
+
         super().__init__(
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=5),
+            update_interval=timedelta(seconds=scan_interval),
         )
 
     def _get_url(self, endpoint: str) -> str:
