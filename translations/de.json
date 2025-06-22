@@ -6,6 +6,7 @@
         "description": "Konfigurieren Sie Ihr FALS22 Taupunkt-Lüftungssystem",
         "data": {
           "host": "IP-Adresse",
+          "name": "Gerätename",
           "password": "Passwort (optional)"
         }
       }
