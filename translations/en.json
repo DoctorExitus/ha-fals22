@@ -24,7 +24,10 @@
     "step": {
       "init": {
         "title": "FALS22 Options",
-        "description": "Configure integration options"
+        "description": "Configure integration options",
+        "data": {
+          "scan_interval": "Polling interval (seconds)"
+        }
       }
     }
   },
