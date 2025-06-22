@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "FALS22 Dewpoint Ventilation",
-        "description": "Configure your FALS22 dewpoint ventilation system",
+        "title": "FaLs22 Dewpoint Ventilation",
+        "description": "Configure your FaLs22 dewpoint ventilation system",
         "data": {
           "host": "IP Address",
           "password": "Password (optional)"
@@ -23,7 +23,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "FALS22 Options",
+        "title": "FaLs22 Options",
         "description": "Configure integration options",
         "data": {
           "scan_interval": "Polling interval (seconds)"
