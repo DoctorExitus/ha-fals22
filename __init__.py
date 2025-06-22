@@ -4,12 +4,15 @@ from __future__ import annotations
 import asyncio
 import logging
 from datetime import timedelta
+from typing import Any
 
 import aiohttp
 import async_timeout
+import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -17,7 +20,33 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.SWITCH]
+# Add the missing platforms
+PLATFORMS: list[Platform] = [
+    Platform.SENSOR, 
+    Platform.BINARY_SENSOR,
+    Platform.SWITCH, 
+    Platform.NUMBER,
+    Platform.TIME,
+]
+
+# Service schemas
+SET_MANUAL_VENTILATION_SCHEMA = vol.Schema(
+    {
+        vol.Required("duration"): cv.positive_int,
+        vol.Required("turn_on"): cv.boolean,
+    }
+)
+
+UPDATE_MULTIPLE_SETTINGS_SCHEMA = vol.Schema(
+    {
+        vol.Optional("min_temp"): vol.All(vol.Coerce(int), vol.Range(min=0, max=35)),
+        vol.Optional("max_temp"): vol.All(vol.Coerce(int), vol.Range(min=0, max=40)),
+        vol.Optional("ventilation"): vol.All(vol.Coerce(int), vol.Range(min=0, max=99)),
+        vol.Optional("break"): vol.All(vol.Coerce(int), vol.Range(min=0, max=90)),
+        vol.Optional("min_hum"): vol.All(vol.Coerce(int), vol.Range(min=10, max=90)),
+        vol.Optional("difference"): vol.All(vol.Coerce(float), vol.Range(min=0.0, max=5.0)),
+    }
+)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -28,6 +57,43 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Register services
+    async def async_set_manual_ventilation(call: ServiceCall) -> None:
+        """Handle set manual ventilation service call."""
+        duration = call.data["duration"]
+        turn_on = call.data["turn_on"]
+        
+        success = await coordinator.async_set_manual_mode(duration, turn_on)
+        if success:
+            await coordinator.async_request_refresh()
+        else:
+            _LOGGER.error("Failed to set manual ventilation mode")
+
+    async def async_update_multiple_settings(call: ServiceCall) -> None:
+        """Handle update multiple settings service call."""
+        settings = {k: v for k, v in call.data.items()}
+        
+        success = await coordinator.async_update_settings(settings)
+        if success:
+            await coordinator.async_request_refresh()
+        else:
+            _LOGGER.error("Failed to update settings: %s", settings)
+
+    hass.services.async_register(
+        DOMAIN,
+        "set_manual_ventilation",
+        async_set_manual_ventilation,
+        schema=SET_MANUAL_VENTILATION_SCHEMA,
+    )
+
+    hass.services.async_register(
+        DOMAIN,
+        "update_multiple_settings",
+        async_update_multiple_settings,
+        schema=UPDATE_MULTIPLE_SETTINGS_SCHEMA,
+    )
+
     return True
 
 
@@ -35,6 +101,12 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
+        
+        # Remove services if this was the last entry
+        if not hass.data[DOMAIN]:
+            hass.services.async_remove(DOMAIN, "set_manual_ventilation")
+            hass.services.async_remove(DOMAIN, "update_multiple_settings")
+            
     return unload_ok
 
 
@@ -91,17 +163,25 @@ class FALS22DataUpdateCoordinator(DataUpdateCoordinator):
             live_data = await self._async_fetch_data("/data/live")
             settings_data = await self._async_fetch_data("/data/settings")
             
+            _LOGGER.debug("Raw live_data: %s", live_data)
+            _LOGGER.debug("Raw settings_data: %s", settings_data)
+            
             # Extract single objects from arrays if needed
             if isinstance(live_data, list) and live_data:
                 live_data = live_data[0]
+                _LOGGER.debug("Extracted live_data from array: %s", live_data)
             if isinstance(settings_data, list) and settings_data:
                 settings_data = settings_data[0]
+                _LOGGER.debug("Extracted settings_data from array: %s", settings_data)
             
-            return {
+            result = {
                 "live": live_data,
                 "settings": settings_data,
             }
+            _LOGGER.debug("Final coordinator data: %s", result)
+            return result
         except Exception as err:
+            _LOGGER.error("Error communicating with API: %s", err)
             raise UpdateFailed(f"Error communicating with API: {err}") from err
 
     async def async_set_manual_mode(self, duration: int, turn_on: bool) -> bool:

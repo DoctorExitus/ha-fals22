@@ -28,15 +28,13 @@ async def async_setup_entry(
     for sensor_type, sensor_config in SENSOR_TYPES.items():
         sensors.append(FALS22Sensor(coordinator, config_entry, sensor_type, sensor_config))
 
-    # Add ventilation state as binary sensor
-    from homeassistant.components.binary_sensor import BinarySensorEntity
-    sensors.append(FALS22VentilationSensor(coordinator, config_entry))
-
     async_add_entities(sensors)
 
 
 class FALS22Sensor(CoordinatorEntity, SensorEntity):
     """Representation of a FALS22 sensor."""
+
+    _attr_has_entity_name = True
 
     def __init__(
         self,
@@ -50,8 +48,11 @@ class FALS22Sensor(CoordinatorEntity, SensorEntity):
         self._config_entry = config_entry
         self._sensor_type = sensor_type
         self._sensor_config = sensor_config
-        self._attr_name = f"{sensor_config['name']}"
         self._attr_unique_id = f"{config_entry.entry_id}_{sensor_type}"
+        
+        # Set translation key for localization
+        if "translation_key" in sensor_config:
+            self._attr_translation_key = sensor_config["translation_key"]
         
         # Set sensor properties
         if "native_unit_of_measurement" in sensor_config:
@@ -113,57 +114,4 @@ class FALS22Sensor(CoordinatorEntity, SensorEntity):
         return None
 
 
-class FALS22VentilationSensor(CoordinatorEntity, SensorEntity):
-    """Representation of the FALS22 ventilation state sensor."""
-
-    def __init__(self, coordinator, config_entry: ConfigEntry) -> None:
-        """Initialize the ventilation sensor."""
-        super().__init__(coordinator)
-        self._config_entry = config_entry
-        self._attr_name = "Ventilation State"
-        self._attr_unique_id = f"{config_entry.entry_id}_ventilation_state"
-        self._attr_icon = "mdi:fan"
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return device info."""
-        return DeviceInfo(
-            identifiers={(DOMAIN, self._config_entry.entry_id)},
-            name="FALS22 Dewpoint Ventilation",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            sw_version="6.0+",
-            configuration_url=f"http://{self._config_entry.data['host']}",
-        )
-
-    @property
-    def native_value(self) -> str:
-        """Return the state of the ventilation."""
-        live_data = self.coordinator.data.get("live", {})
-        if not live_data:
-            return "unknown"
-        
-        is_on = live_data.get("on", 0)
-        return "on" if is_on == 1 else "off"
-
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        return self.coordinator.last_update_success
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any] | None:
-        """Return additional state attributes."""
-        live_data = self.coordinator.data.get("live", {})
-        settings_data = self.coordinator.data.get("settings", {})
-        
-        if not live_data:
-            return None
-
-        return {
-            "operating_hours": live_data.get("operating_hours", 0),
-            "message": live_data.get("message", "").strip(),
-            "ventilation_duration": settings_data.get("ventilation", 0),
-            "break_duration": settings_data.get("break", 0),
-            "keylock_enabled": settings_data.get("code", 0) == 1,
-        }
+# End of sensor.py

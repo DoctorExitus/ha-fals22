@@ -1,17 +1,17 @@
-"""Support for FALS22 number entities."""
+"""Support for FALS22 time entities."""
 from __future__ import annotations
 
 import logging
-from typing import Any
+from datetime import time
 
-from homeassistant.components.number import NumberEntity
+from homeassistant.components.time import TimeEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, MANUFACTURER, MODEL, NUMBER_TYPES
+from .const import DOMAIN, MANUFACTURER, MODEL, TIME_TYPES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,18 +21,18 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up FALS22 number entities from a config entry."""
+    """Set up FALS22 time entities from a config entry."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     entities = []
-    for number_type, number_config in NUMBER_TYPES.items():
-        entities.append(FALS22NumberEntity(coordinator, config_entry, number_type, number_config))
+    for time_type, time_config in TIME_TYPES.items():
+        entities.append(FALS22TimeEntity(coordinator, config_entry, time_type, time_config))
 
     async_add_entities(entities)
 
 
-class FALS22NumberEntity(CoordinatorEntity, NumberEntity):
-    """Representation of a FALS22 number entity."""
+class FALS22TimeEntity(CoordinatorEntity, TimeEntity):
+    """Representation of a FALS22 time entity."""
 
     _attr_has_entity_name = True
 
@@ -40,28 +40,21 @@ class FALS22NumberEntity(CoordinatorEntity, NumberEntity):
         self,
         coordinator,
         config_entry: ConfigEntry,
-        number_type: str,
-        number_config: dict[str, Any],
+        time_type: str,
+        time_config: dict[str, str],
     ) -> None:
-        """Initialize the number entity."""
+        """Initialize the time entity."""
         super().__init__(coordinator)
         self._config_entry = config_entry
-        self._number_type = number_type
-        self._attr_unique_id = f"{config_entry.entry_id}_{number_type}"
+        self._time_type = time_type
+        self._time_config = time_config
+        self._attr_unique_id = f"{config_entry.entry_id}_{time_type}"
         
         # Set translation key for localization
-        if "translation_key" in number_config:
-            self._attr_translation_key = number_config["translation_key"]
+        if "translation_key" in time_config:
+            self._attr_translation_key = time_config["translation_key"]
         
-        # Set number properties
-        self._attr_icon = number_config["icon"]
-        self._attr_native_min_value = number_config["native_min_value"]
-        self._attr_native_max_value = number_config["native_max_value"]
-        self._attr_native_step = number_config["native_step"]
-        self._attr_native_unit_of_measurement = number_config.get("native_unit_of_measurement")
-        
-        if "device_class" in number_config:
-            self._attr_device_class = number_config["device_class"]
+        self._attr_icon = time_config["icon"]
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -76,23 +69,32 @@ class FALS22NumberEntity(CoordinatorEntity, NumberEntity):
         )
 
     @property
-    def native_value(self) -> float | None:
-        """Return the current value."""
+    def native_value(self) -> time | None:
+        """Return the current time value."""
         settings_data = self.coordinator.data.get("settings", {})
-        return settings_data.get(self._number_type)
+        
+        hours = settings_data.get(self._time_config["hours_key"])
+        minutes = settings_data.get(self._time_config["minutes_key"])
+        
+        if hours is not None and minutes is not None:
+            return time(hour=hours, minute=minutes)
+        return None
 
     @property
     def available(self) -> bool:
         """Return if entity is available."""
         return self.coordinator.last_update_success
 
-    async def async_set_native_value(self, value: float) -> None:
-        """Set new value."""
-        settings = {self._number_type: value}
+    async def async_set_value(self, value: time) -> None:
+        """Set new time value."""
+        settings = {
+            self._time_config["hours_key"]: value.hour,
+            self._time_config["minutes_key"]: value.minute,
+        }
         
         success = await self.coordinator.async_update_settings(settings)
         if success:
             # Update coordinator data immediately
             await self.coordinator.async_request_refresh()
         else:
-            _LOGGER.error("Failed to update %s to %s", self._number_type, value)
+            _LOGGER.error("Failed to update %s to %s", self._time_type, value)

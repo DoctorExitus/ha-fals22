@@ -1,19 +1,12 @@
 {
     "domain": "fals22",
     "name": "FALS22 Dewpoint Ventilation",
-    "codeowners": ["@DoctorExitus"],
+    "codeowners": ["@yourusername"],
     "config_flow": true,
     "dependencies": [],
-    "documentation": "https://github.com/doctorexitus/ha-fals22",
+    "documentation": "https://github.com/yourusername/ha-fals22",
     "iot_class": "local_polling",
-    "issue_tracker": "https://github.com/doctorexitus/ha-fals22/issues",
-    "platforms": [
-        "sensor",
-        "switch", 
-        "number"
-    ],
-    "requirements": [
-        "aiohttp"
-    ],
+    "issue_tracker": "https://github.com/yourusername/ha-fals22/issues",
+    "requirements": [],
     "version": "1.0.0"
   }

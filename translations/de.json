@@ -1,0 +1,146 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "FALS22 Taupunkt-Lüftung",
+        "description": "Konfigurieren Sie Ihr FALS22 Taupunkt-Lüftungssystem",
+        "data": {
+          "host": "IP-Adresse",
+          "password": "Passwort (optional)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zum Gerät fehlgeschlagen",
+      "invalid_auth": "Ungültige Authentifizierung",
+      "invalid_data": "Ungültige Antwort vom Gerät",
+      "unknown": "Unerwarteter Fehler aufgetreten"
+    },
+    "abort": {
+      "already_configured": "Gerät ist bereits konfiguriert"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "FALS22 Optionen",
+        "description": "Integrationsoptionen konfigurieren"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "temp_in": {
+        "name": "Innentemperatur"
+      },
+      "temp_out": {
+        "name": "Außentemperatur"
+      },
+      "hum_in": {
+        "name": "Relative Luftfeuchtigkeit Innen"
+      },
+      "hum_out": {
+        "name": "Relative Luftfeuchtigkeit Außen"
+      },
+      "abs_hum_in": {
+        "name": "Absolute Luftfeuchtigkeit Innen"
+      },
+      "abs_hum_out": {
+        "name": "Absolute Luftfeuchtigkeit Außen"
+      },
+      "operating_hours": {
+        "name": "Betriebsstunden"
+      },
+      "message": {
+        "name": "Statusmeldung"
+      }
+    },
+    "binary_sensor": {
+      "on": {
+        "name": "Lüftung"
+      }
+    },
+    "switch": {
+      "manual_mode": {
+        "name": "Manuelle Lüftung"
+      },
+      "keylock": {
+        "name": "Tastensperre"
+      }
+    },
+    "number": {
+      "min_temp": {
+        "name": "Mindesttemperatur"
+      },
+      "max_temp": {
+        "name": "Höchsttemperatur"
+      },
+      "ventilation": {
+        "name": "Lüftungsdauer"
+      },
+      "break": {
+        "name": "Pausendauer"
+      },
+      "min_hum": {
+        "name": "Ziel-Luftfeuchtigkeit"
+      },
+      "difference": {
+        "name": "Luftfeuchtigkeits-Differenz"
+      }
+    },
+    "time": {
+      "working_time_from": {
+        "name": "Arbeitszeit Beginn"
+      },
+      "working_time_to": {
+        "name": "Arbeitszeit Ende"
+      }
+    }
+  },
+  "services": {
+    "set_manual_ventilation": {
+      "name": "Manuelle Lüftung Einstellen",
+      "description": "Manuelle Lüftung mit benutzerdefinierter Dauer einstellen",
+      "fields": {
+        "duration": {
+          "name": "Dauer",
+          "description": "Dauer in Minuten (0-300)"
+        },
+        "turn_on": {
+          "name": "Einschalten",
+          "description": "Ob die Lüftung ein- oder ausgeschaltet werden soll"
+        }
+      }
+    },
+    "update_multiple_settings": {
+      "name": "Mehrere Einstellungen Aktualisieren",
+      "description": "Mehrere Geräteeinstellungen gleichzeitig aktualisieren",
+      "fields": {
+        "min_temp": {
+          "name": "Mindesttemperatur",
+          "description": "Mindesttemperatur (0-35°C)"
+        },
+        "max_temp": {
+          "name": "Höchsttemperatur",
+          "description": "Höchsttemperatur (0-40°C)"
+        },
+        "ventilation": {
+          "name": "Lüftungsdauer",
+          "description": "Lüftungsdauer (0-99 min)"
+        },
+        "break": {
+          "name": "Pausendauer",
+          "description": "Pausendauer (0-90 min)"
+        },
+        "min_hum": {
+          "name": "Ziel-Luftfeuchtigkeit",
+          "description": "Ziel-Luftfeuchtigkeit (10-90%)"
+        },
+        "difference": {
+          "name": "Luftfeuchtigkeits-Differenz",
+          "description": "Luftfeuchtigkeits-Differenz (0,0-5,0 g/m³)"
+        }
+      }
+    }
+  }
+}

@@ -14,11 +14,11 @@ DEFAULT_SCAN_INTERVAL = 300  # 5 minutes
 MANUFACTURER = "FALS22"
 MODEL = "Dewpoint Ventilation System"
 
-# Sensor types with their properties
+# Sensor types with their properties and translation keys
 SENSOR_TYPES = {
     # Temperature sensors
     "temp_in": {
-        "name": "Indoor Temperature",
+        "translation_key": "temp_in",
         "native_unit_of_measurement": "°C",
         "device_class": "temperature",
         "state_class": "measurement",
@@ -26,7 +26,7 @@ SENSOR_TYPES = {
         "data_key": "live",
     },
     "temp_out": {
-        "name": "Outdoor Temperature", 
+        "translation_key": "temp_out",
         "native_unit_of_measurement": "°C",
         "device_class": "temperature",
         "state_class": "measurement",
@@ -35,7 +35,7 @@ SENSOR_TYPES = {
     },
     # Humidity sensors
     "hum_in": {
-        "name": "Indoor Relative Humidity",
+        "translation_key": "hum_in",
         "native_unit_of_measurement": "%",
         "device_class": "humidity",
         "state_class": "measurement",
@@ -43,7 +43,7 @@ SENSOR_TYPES = {
         "data_key": "live",
     },
     "hum_out": {
-        "name": "Outdoor Relative Humidity",
+        "translation_key": "hum_out",
         "native_unit_of_measurement": "%", 
         "device_class": "humidity",
         "state_class": "measurement",
@@ -51,14 +51,14 @@ SENSOR_TYPES = {
         "data_key": "live",
     },
     "abs_hum_in": {
-        "name": "Indoor Absolute Humidity",
+        "translation_key": "abs_hum_in",
         "native_unit_of_measurement": "g/m³",
         "state_class": "measurement",
         "icon": "mdi:water",
         "data_key": "live",
     },
     "abs_hum_out": {
-        "name": "Outdoor Absolute Humidity",
+        "translation_key": "abs_hum_out",
         "native_unit_of_measurement": "g/m³",
         "state_class": "measurement", 
         "icon": "mdi:water",
@@ -66,65 +66,110 @@ SENSOR_TYPES = {
     },
     # Status sensors
     "operating_hours": {
-        "name": "Operating Hours",
+        "translation_key": "operating_hours",
         "native_unit_of_measurement": "h",
         "state_class": "total_increasing",
         "icon": "mdi:clock",
         "data_key": "live",
     },
     "message": {
-        "name": "Status Message",
+        "translation_key": "message",
         "icon": "mdi:message-text",
         "data_key": "live",
-    },
-    # Settings sensors
-    "min_temp": {
-        "name": "Minimum Temperature Setting",
-        "native_unit_of_measurement": "°C",
-        "device_class": "temperature",
-        "icon": "mdi:thermometer-low",
-        "data_key": "settings",
-    },
-    "max_temp": {
-        "name": "Maximum Temperature Setting", 
-        "native_unit_of_measurement": "°C",
-        "device_class": "temperature",
-        "icon": "mdi:thermometer-high",
-        "data_key": "settings",
-    },
-    "ventilation": {
-        "name": "Ventilation Duration Setting",
-        "native_unit_of_measurement": "min",
-        "icon": "mdi:timer",
-        "data_key": "settings",
-    },
-    "break": {
-        "name": "Break Duration Setting",
-        "native_unit_of_measurement": "min", 
-        "icon": "mdi:timer-off",
-        "data_key": "settings",
-    },
-    "min_hum": {
-        "name": "Target Humidity Setting",
-        "native_unit_of_measurement": "%",
-        "device_class": "humidity",
-        "icon": "mdi:target",
-        "data_key": "settings",
-    },
-    "difference": {
-        "name": "Absolute Humidity Difference Setting",
-        "native_unit_of_measurement": "g/m³",
-        "icon": "mdi:delta",
-        "data_key": "settings",
     },
 }
 
 # Binary sensor for ventilation state
 BINARY_SENSOR_TYPES = {
     "on": {
-        "name": "Ventilation Active",
+        "translation_key": "on",
         "device_class": "running",
         "icon": "mdi:fan",
         "data_key": "live",
     }
+}
+
+# Number entity types with translation keys
+NUMBER_TYPES = {
+    "min_temp": {
+        "translation_key": "min_temp",
+        "icon": "mdi:thermometer-low",
+        "native_min_value": 0,
+        "native_max_value": 35,
+        "native_step": 1,
+        "native_unit_of_measurement": "°C",
+        "device_class": "temperature",
+    },
+    "max_temp": {
+        "translation_key": "max_temp",
+        "icon": "mdi:thermometer-high",
+        "native_min_value": 0,
+        "native_max_value": 40,
+        "native_step": 1,
+        "native_unit_of_measurement": "°C",
+        "device_class": "temperature",
+    },
+    "ventilation": {
+        "translation_key": "ventilation",
+        "icon": "mdi:timer",
+        "native_min_value": 0,
+        "native_max_value": 99,
+        "native_step": 1,
+        "native_unit_of_measurement": "min",
+        "device_class": "duration",
+    },
+    "break": {
+        "translation_key": "break",
+        "icon": "mdi:timer-pause",
+        "native_min_value": 0,
+        "native_max_value": 90,
+        "native_step": 1,
+        "native_unit_of_measurement": "min",
+        "device_class": "duration",
+    },
+    "min_hum": {
+        "translation_key": "min_hum",
+        "icon": "mdi:water-percent",
+        "native_min_value": 10,
+        "native_max_value": 90,
+        "native_step": 1,
+        "native_unit_of_measurement": "%",
+        "device_class": "humidity",
+    },
+    "difference": {
+        "translation_key": "difference",
+        "icon": "mdi:delta",
+        "native_min_value": 0.0,
+        "native_max_value": 5.0,
+        "native_step": 0.1,
+        "native_unit_of_measurement": "g/m³",
+    },
+}
+
+# Time entity types with translation keys
+TIME_TYPES = {
+    "working_time_from": {
+        "translation_key": "working_time_from",
+        "icon": "mdi:clock-start",
+        "hours_key": "working_hours_from",
+        "minutes_key": "working_minutes_from",
+    },
+    "working_time_to": {
+        "translation_key": "working_time_to",
+        "icon": "mdi:clock-end", 
+        "hours_key": "working_hours_to",
+        "minutes_key": "working_minutes_to",
+    },
+}
+
+# Switch entity types with translation keys
+SWITCH_TYPES = {
+    "manual_mode": {
+        "translation_key": "manual_mode",
+        "icon": "mdi:fan-auto",
+    },
+    "keylock": {
+        "translation_key": "keylock",
+        "icon": "mdi:lock",
+    },
 }
