@@ -13,9 +13,9 @@ A Home Assistant custom integration for FaLs22 Dewpoint Ventilation systems. Thi
 - **Multi-language Support**: English and German localization
 - **Local Control**: Works with FaLs22 webserver mode for local data access
 
-## Supported FALS22 Models
+## Supported FaLs22 Models
 
-This integration is compatible with FALS22 Dewpoint Ventilation systems running firmware version 6.0 and above.
+This integration is compatible with FaLs22 Dewpoint Ventilation systems running firmware version 6.0 and above.
 
 ## Installation
 
@@ -195,4 +195,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Thanks to DNE Elektronik-Systeme Gmbh for creating the FaLs22 dewpoint ventilation system
 - Home Assistant community for integration guidelines and support
-- Claude Sonnet 4 who helped create this integration
+- Claude Sonnet 4 which helped create this integration
