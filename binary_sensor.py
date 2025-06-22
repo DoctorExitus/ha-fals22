@@ -11,7 +11,8 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, MANUFACTURER, MODEL
+from .const import DOMAIN
+from .device_helper import get_device_info, get_entity_name_prefix
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,6 +41,9 @@ class FALS22VentilationBinarySensor(CoordinatorEntity, BinarySensorEntity):
         """Initialize the binary sensor."""
         super().__init__(coordinator)
         self._config_entry = config_entry
+        
+        # Generate entity ID based on device name
+        entity_prefix = get_entity_name_prefix(config_entry)
         self._attr_unique_id = f"{config_entry.entry_id}_ventilation_running"
         self._attr_translation_key = "on"
         self._attr_device_class = BinarySensorDeviceClass.RUNNING
@@ -48,14 +52,7 @@ class FALS22VentilationBinarySensor(CoordinatorEntity, BinarySensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device info."""
-        return DeviceInfo(
-            identifiers={(DOMAIN, self._config_entry.entry_id)},
-            name="FALS22 Dewpoint Ventilation",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            sw_version="6.0+",
-            configuration_url=f"http://{self._config_entry.data['host']}",
-        )
+        return get_device_info(self._config_entry)
 
     @property
     def is_on(self) -> bool | None:
