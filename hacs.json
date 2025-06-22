@@ -1,0 +1,13 @@
+{
+  "name": "FaLs22 Taupunkt-Lüftungssteuerung",
+  "hacs": "1.6.0",
+  "domains": [
+    "sensor",
+    "binary_sensor", 
+    "switch",
+    "number",
+    "time"
+  ],
+  "iot_class": "Local Polling",
+  "homeassistant": "2023.1.0"
+}
