@@ -11,7 +11,8 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, MANUFACTURER, MODEL, SWITCH_TYPES
+from .const import DOMAIN, SWITCH_TYPES
+from .device_helper import get_device_info, get_entity_name_prefix
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,6 +42,9 @@ class FALS22ManualModeSwitch(CoordinatorEntity, SwitchEntity):
         """Initialize the manual mode switch."""
         super().__init__(coordinator)
         self._config_entry = config_entry
+        
+        # Generate entity ID based on device name
+        entity_prefix = get_entity_name_prefix(config_entry)
         self._attr_unique_id = f"{config_entry.entry_id}_manual_mode"
         self._attr_translation_key = SWITCH_TYPES["manual_mode"]["translation_key"]
         self._attr_icon = SWITCH_TYPES["manual_mode"]["icon"]
@@ -48,14 +52,7 @@ class FALS22ManualModeSwitch(CoordinatorEntity, SwitchEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device info."""
-        return DeviceInfo(
-            identifiers={(DOMAIN, self._config_entry.entry_id)},
-            name="FALS22 Dewpoint Ventilation",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            sw_version="6.0+",
-            configuration_url=f"http://{self._config_entry.data['host']}",
-        )
+        return get_device_info(self._config_entry)
 
     @property
     def is_on(self) -> bool:
@@ -90,6 +87,9 @@ class FALS22KeylockSwitch(CoordinatorEntity, SwitchEntity):
         """Initialize the keylock switch."""
         super().__init__(coordinator)
         self._config_entry = config_entry
+        
+        # Generate entity ID based on device name  
+        entity_prefix = get_entity_name_prefix(config_entry)
         self._attr_unique_id = f"{config_entry.entry_id}_keylock"
         self._attr_translation_key = SWITCH_TYPES["keylock"]["translation_key"]
         self._attr_icon = SWITCH_TYPES["keylock"]["icon"]
@@ -97,14 +97,7 @@ class FALS22KeylockSwitch(CoordinatorEntity, SwitchEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device info."""
-        return DeviceInfo(
-            identifiers={(DOMAIN, self._config_entry.entry_id)},
-            name="FALS22 Dewpoint Ventilation",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            sw_version="6.0+",
-            configuration_url=f"http://{self._config_entry.data['host']}",
-        )
+        return get_device_info(self._config_entry)
 
     @property
     def is_on(self) -> bool:
