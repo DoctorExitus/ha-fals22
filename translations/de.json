@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "FALS22 Taupunkt-Lüftung",
+        "title": "FaLs22 Taupunkt-Lüftung",
         "description": "Konfigurieren Sie Ihr FALS22 Taupunkt-Lüftungssystem",
         "data": {
           "host": "IP-Adresse",
@@ -23,7 +23,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "FALS22 Optionen",
+        "title": "FaLs22 Optionen",
         "description": "Integrationsoptionen konfigurieren",
         "data": {
           "scan_interval": "Abfrageintervall (Sekunden)"
