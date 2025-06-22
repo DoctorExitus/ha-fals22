@@ -7,12 +7,12 @@ CONF_HOST = "host"
 CONF_PASSWORD = "password"
 
 # Default values
-DEFAULT_NAME = "FALS22 Dewpoint Ventilation"
-DEFAULT_SCAN_INTERVAL = 300  # 5 minutes
+DEFAULT_NAME = "FaLs22 Taupunkt-Lüftungssteuerung"
+DEFAULT_SCAN_INTERVAL = 60  # 1 minutes
 
 # Device info
-MANUFACTURER = "FALS22"
-MODEL = "Dewpoint Ventilation System"
+MANUFACTURER = "DNE Elektronik-Systeme Gmbh"
+MODEL = "FaLs22"
 
 # Sensor types with their properties and translation keys
 SENSOR_TYPES = {
