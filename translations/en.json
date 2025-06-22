@@ -6,6 +6,7 @@
         "description": "Configure your FaLs22 dewpoint ventilation system",
         "data": {
           "host": "IP Address",
+          "name": "Device Name",
           "password": "Password (optional)"
         }
       }
