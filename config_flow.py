@@ -77,7 +77,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     # Return info that you want to store in the config entry.
     return {
-        "title":  f"{name} ({host})",
+        "title": f"{name} ({host})",
         "host": host,
         "name": name,
         "password": password,
