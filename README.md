@@ -80,7 +80,7 @@ The integration creates the following entities:
 - **Ventilation** (`binary_sensor.fals22_ventilation`) - Shows if ventilation is currently running
 
 ### Switches
-- **Manual Mode (30m in.)** (`switch.fals22_manual_ventilation`) - Override the current state for 30 minutes
+- **Manual Mode (30 min.)** (`switch.fals22_manual_mode_30_min`) - Override the current state for 30 minutes
 - **Keylock** (`switch.fals22_keylock`) - Enable/disable device keylock
 
 ### Number Controls
