@@ -193,6 +193,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Thanks to DNE Elektronik-Systeme Gmbh for providing the FaLs22 dewpoint ventilation system
+- Thanks to DNE Elektronik-Systeme Gmbh for creating the FaLs22 dewpoint ventilation system
 - Home Assistant community for integration guidelines and support
 - Claude Sonnet 4 who helped create this integration
