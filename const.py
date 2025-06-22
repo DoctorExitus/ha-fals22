@@ -7,7 +7,7 @@ CONF_HOST = "host"
 CONF_PASSWORD = "password"
 
 # Default values
-DEFAULT_NAME = "FaLs22 Taupunkt-Lüftungssteuerung"
+DEFAULT_NAME = "FaLs22"
 DEFAULT_SCAN_INTERVAL = 60  # 1 minutes
 
 # Device info
