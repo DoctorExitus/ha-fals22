@@ -24,7 +24,10 @@
     "step": {
       "init": {
         "title": "FALS22 Optionen",
-        "description": "Integrationsoptionen konfigurieren"
+        "description": "Integrationsoptionen konfigurieren",
+        "data": {
+          "scan_interval": "Abfrageintervall (Sekunden)"
+        }
       }
     }
   },
