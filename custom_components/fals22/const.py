@@ -166,7 +166,7 @@ TIME_TYPES = {
 SWITCH_TYPES = {
     "manual_mode": {
         "translation_key": "manual_mode",
-        "icon": "mdi:fan-manual",
+        "icon": "mdi:fan-auto",
     },
     "keylock": {
         "translation_key": "keylock",
