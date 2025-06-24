@@ -104,9 +104,9 @@ class FALS22ManualDurationEntity(CoordinatorEntity, NumberEntity):
     _attr_has_entity_name = True
     _attr_translation_key = "manual_duration"
     _attr_icon = "mdi:timer-play"
-    _attr_native_min_value = 1
+    _attr_native_min_value = 5
     _attr_native_max_value = 300
-    _attr_native_step = 1
+    _attr_native_step = 5
     _attr_native_unit_of_measurement = "min"
     _attr_device_class = "duration"
 
