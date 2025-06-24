@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "FaLs22 Taupunkt-Lüftung",
-        "description": "Konfigurieren Sie Ihr FALS22 Taupunkt-Lüftungssystem",
+        "title": "FaLs22",
+        "description": "Konfigurieren Sie Ihr FaLs22 Taupunkt-Lüftungssystem",
         "data": {
           "host": "IP-Adresse",
           "name": "Gerätename",
@@ -66,7 +66,7 @@
     },
     "switch": {
       "manual_mode": {
-        "name": "Manueller Modus (30 Min.)"
+        "name": "Manueller Modus"
       },
       "keylock": {
         "name": "Tastensperre"
@@ -90,6 +90,9 @@
       },
       "difference": {
         "name": "Luftfeuchtigkeits-Differenz"
+      },
+      "manual_duration": {
+        "name": "Manuelle Lüftungsdauer"
       }
     },
     "time": {
