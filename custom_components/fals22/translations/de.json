@@ -92,7 +92,7 @@
         "name": "Luftfeuchtigkeits-Differenz"
       },
       "manual_duration": {
-        "name": "Manuelle Lüftungsdauer"
+        "name": "Manueller Modus (Dauer)"
       }
     },
     "time": {
