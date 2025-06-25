@@ -1,6 +1,6 @@
 {
     "domain": "fals22",
-    "name": "FaLs22 Taupunkt-Lüftungssteuerung",
+    "name": "FaLs22",
     "codeowners": ["@DoctorExitus"],
     "config_flow": true,
     "dependencies": [],

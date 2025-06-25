@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "FaLs22 Dewpoint Ventilation",
+        "title": "FaLs22",
         "description": "Configure your FaLs22 dewpoint ventilation system",
         "data": {
           "host": "IP Address",
@@ -66,7 +66,7 @@
     },
     "switch": {
       "manual_mode": {
-        "name": "Manual Mode (30 min.)"
+        "name": "Manual Mode"
       },
       "keylock": {
         "name": "Keylock"
@@ -90,6 +90,9 @@
       },
       "difference": {
         "name": "Humidity Difference"
+      },
+      "manual_duration": {
+        "name": "Manual Mode Duration"
       }
     },
     "time": {

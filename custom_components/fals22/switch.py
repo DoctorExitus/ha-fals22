@@ -16,6 +16,9 @@ from .device_helper import get_device_info, get_entity_name_prefix
 
 _LOGGER = logging.getLogger(__name__)
 
+# Default manual mode duration in minutes
+DEFAULT_MANUAL_DURATION = 30
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -66,16 +69,40 @@ class FALS22ManualModeSwitch(CoordinatorEntity, SwitchEntity):
         return self.coordinator.last_update_success
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        """Turn on manual ventilation for 30 minutes."""
-        success = await self.coordinator.async_set_manual_mode(30, True)
+        """Turn on manual ventilation."""
+        # Get manual duration from coordinator's persistent storage or use default
+        if hasattr(self.coordinator, '_manual_duration'):
+            duration = self.coordinator._manual_duration
+        else:
+            duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
+        
+        success = await self.coordinator.async_set_manual_mode(duration, True)
         if success:
             await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        """Turn off manual ventilation for 30 minutes."""
-        success = await self.coordinator.async_set_manual_mode(30, False)
+        """Turn off manual ventilation."""
+        # Get manual duration from coordinator's persistent storage or use default
+        if hasattr(self.coordinator, '_manual_duration'):
+            duration = self.coordinator._manual_duration
+        else:
+            duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
+        
+        success = await self.coordinator.async_set_manual_mode(duration, False)
         if success:
             await self.coordinator.async_request_refresh()
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Return entity specific state attributes."""
+        if hasattr(self.coordinator, '_manual_duration'):
+            duration = self.coordinator._manual_duration
+        else:
+            duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
+        
+        return {
+            "manual_duration": duration
+        }
 
 
 class FALS22KeylockSwitch(CoordinatorEntity, SwitchEntity):

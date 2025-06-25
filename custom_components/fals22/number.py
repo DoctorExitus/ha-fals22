@@ -28,6 +28,9 @@ async def async_setup_entry(
     entities = []
     for number_type, number_config in NUMBER_TYPES.items():
         entities.append(FALS22NumberEntity(coordinator, config_entry, number_type, number_config))
+    
+    # Add manual duration entity
+    entities.append(FALS22ManualDurationEntity(coordinator, config_entry))
 
     async_add_entities(entities)
 
@@ -93,3 +96,59 @@ class FALS22NumberEntity(CoordinatorEntity, NumberEntity):
             await self.coordinator.async_request_refresh()
         else:
             _LOGGER.error("Failed to update %s to %s", self._number_type, value)
+
+
+class FALS22ManualDurationEntity(CoordinatorEntity, NumberEntity):
+    """Representation of manual mode duration entity."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "manual_duration"
+    _attr_icon = "mdi:timer-play"
+    _attr_native_min_value = 5
+    _attr_native_max_value = 300
+    _attr_native_step = 5
+    _attr_native_unit_of_measurement = "min"
+    _attr_device_class = "duration"
+
+    def __init__(self, coordinator, config_entry: ConfigEntry) -> None:
+        """Initialize the manual duration entity."""
+        super().__init__(coordinator)
+        self._config_entry = config_entry
+        
+        # Generate entity ID based on device name
+        entity_prefix = get_entity_name_prefix(config_entry)
+        self._attr_unique_id = f"{config_entry.entry_id}_manual_duration"
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device info."""
+        return get_device_info(self._config_entry)
+
+    @property
+    def native_value(self) -> float:
+        """Return the current value."""
+        # First check if we have a persistent value
+        if hasattr(self.coordinator, '_manual_duration'):
+            return self.coordinator._manual_duration
+        # Then check coordinator data
+        if "manual_duration" in self.coordinator.data:
+            return self.coordinator.data["manual_duration"]
+        # Finally return default
+        return 30
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return self.coordinator.last_update_success
+
+    async def async_set_native_value(self, value: float) -> None:
+        """Set new value."""
+        # Store the manual duration in coordinator data
+        self.coordinator.data["manual_duration"] = int(value)
+        # Store it persistently in the coordinator
+        if not hasattr(self.coordinator, '_manual_duration'):
+            self.coordinator._manual_duration = int(value)
+        else:
+            self.coordinator._manual_duration = int(value)
+        # Notify listeners that data has changed
+        self.coordinator.async_set_updated_data(self.coordinator.data)
