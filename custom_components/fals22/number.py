@@ -127,7 +127,14 @@ class FALS22ManualDurationEntity(CoordinatorEntity, NumberEntity):
     @property
     def native_value(self) -> float:
         """Return the current value."""
-        return self.coordinator.data.get("manual_duration", 30)
+        # First check if we have a persistent value
+        if hasattr(self.coordinator, '_manual_duration'):
+            return self.coordinator._manual_duration
+        # Then check coordinator data
+        if "manual_duration" in self.coordinator.data:
+            return self.coordinator.data["manual_duration"]
+        # Finally return default
+        return 30
 
     @property
     def available(self) -> bool:
@@ -138,5 +145,10 @@ class FALS22ManualDurationEntity(CoordinatorEntity, NumberEntity):
         """Set new value."""
         # Store the manual duration in coordinator data
         self.coordinator.data["manual_duration"] = int(value)
+        # Store it persistently in the coordinator
+        if not hasattr(self.coordinator, '_manual_duration'):
+            self.coordinator._manual_duration = int(value)
+        else:
+            self.coordinator._manual_duration = int(value)
         # Notify listeners that data has changed
         self.coordinator.async_set_updated_data(self.coordinator.data)
