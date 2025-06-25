@@ -70,8 +70,11 @@ class FALS22ManualModeSwitch(CoordinatorEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on manual ventilation."""
-        # Get manual duration from coordinator data or use default
-        duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
+        # Get manual duration from coordinator's persistent storage or use default
+        if hasattr(self.coordinator, '_manual_duration'):
+            duration = self.coordinator._manual_duration
+        else:
+            duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
         
         success = await self.coordinator.async_set_manual_mode(duration, True)
         if success:
@@ -79,8 +82,11 @@ class FALS22ManualModeSwitch(CoordinatorEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off manual ventilation."""
-        # Get manual duration from coordinator data or use default
-        duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
+        # Get manual duration from coordinator's persistent storage or use default
+        if hasattr(self.coordinator, '_manual_duration'):
+            duration = self.coordinator._manual_duration
+        else:
+            duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
         
         success = await self.coordinator.async_set_manual_mode(duration, False)
         if success:
@@ -89,8 +95,13 @@ class FALS22ManualModeSwitch(CoordinatorEntity, SwitchEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         """Return entity specific state attributes."""
+        if hasattr(self.coordinator, '_manual_duration'):
+            duration = self.coordinator._manual_duration
+        else:
+            duration = self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
+        
         return {
-            "manual_duration": self.coordinator.data.get("manual_duration", DEFAULT_MANUAL_DURATION)
+            "manual_duration": duration
         }
 
 
