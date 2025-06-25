@@ -52,48 +52,54 @@ Refer to your FaLs22 manual for detailed setup instructions.
 
 1. Go to **Settings** → **Devices & Services**
 2. Click **Add Integration**
-3. Search for "FaLs22 Taupunkt-Lüftungssteuerung"
-4. Enter your device's IP address
-5. Optionally enter the device password if password protection is enabled
-6. Complete the setup process
+3. Search for "FaLs22"
+4. Enter a device name (used for entity naming, defaults to "FaLs22")
+5. Enter your device's IP address
+6. Optionally enter the device password if password protection is enabled
+7. Complete the setup process
 
 ### Configuration Options
 
-- **IP Address**: The IP address of your FaLs22 device
-- **Password**: Optional password for accessing the device (if enabled on the device)
+After adding the integration, you can configure additional options:
+
+1. Click on the FaLs22 integration
+2. Click on "Configure"
+3. Adjust the following settings:
+   - **Polling Interval**: How often to fetch data from the device (30-3600 seconds, default: 60)
 
 ## Entities
 
-The integration creates the following entities:
+The integration creates the following entities (entity names will use your configured device name):
 
 ### Sensors
-- **Indoor Temperature** (`sensor.fals22_indoor_temperature`)
-- **Outdoor Temperature** (`sensor.fals22_outdoor_temperature`)
-- **Indoor Relative Humidity** (`sensor.fals22_indoor_relative_humidity`)
-- **Outdoor Relative Humidity** (`sensor.fals22_outdoor_relative_humidity`)
-- **Indoor Absolute Humidity** (`sensor.fals22_indoor_absolute_humidity`)
-- **Outdoor Absolute Humidity** (`sensor.fals22_outdoor_absolute_humidity`)
-- **Operating Hours** (`sensor.fals22_operating_hours`)
-- **Status Message** (`sensor.fals22_status_message`)
+- **Indoor Temperature** (`sensor.[device_name]_indoor_temperature`)
+- **Outdoor Temperature** (`sensor.[device_name]_outdoor_temperature`)
+- **Indoor Relative Humidity** (`sensor.[device_name]_indoor_relative_humidity`)
+- **Outdoor Relative Humidity** (`sensor.[device_name]_outdoor_relative_humidity`)
+- **Indoor Absolute Humidity** (`sensor.[device_name]_indoor_absolute_humidity`)
+- **Outdoor Absolute Humidity** (`sensor.[device_name]_outdoor_absolute_humidity`)
+- **Operating Hours** (`sensor.[device_name]_operating_hours`)
+- **Status Message** (`sensor.[device_name]_status_message`)
 
 ### Binary Sensors
-- **Ventilation** (`binary_sensor.fals22_ventilation`) - Shows if ventilation is currently running
+- **Ventilation** (`binary_sensor.[device_name]_ventilation`) - Shows if ventilation is currently running
 
 ### Switches
-- **Manual Mode (30 min.)** (`switch.fals22_manual_mode_30_min`) - Override the current state for 30 minutes
-- **Keylock** (`switch.fals22_keylock`) - Enable/disable device keylock
+- **Manual Mode** (`switch.[device_name]_manual_mode`) - Override the current Ventilation state for the duration set in the Manual Mode Duration entity
+- **Keylock** (`switch.[device_name]_keylock`) - Enable/disable device keylock
 
 ### Number Controls
-- **Minimum Temperature** (`number.fals22_minimum_temperature`) - Set minimum operating temperature (0-35°C)
-- **Maximum Temperature** (`number.fals22_maximum_temperature`) - Set maximum operating temperature (0-40°C)
-- **Ventilation Duration** (`number.fals22_ventilation_duration`) - Set ventilation duration (0-99 min)
-- **Break Duration** (`number.fals22_break_duration`) - Set break duration (0-90 min)
-- **Target Humidity** (`number.fals22_target_humidity`) - Set target humidity (10-90%)
-- **Humidity Difference** (`number.fals22_humidity_difference`) - Set humidity difference threshold (0.0-5.0 g/m³)
+- **Manual Mode Duration** (`number.[device_name]_manual_mode_duration`) - Set custom duration for manual mode (0-300 minutes, defaults to 30 minutes)
+- **Minimum Temperature** (`number.[device_name]_minimum_temperature`) - Set minimum operating temperature (0-35°C)
+- **Maximum Temperature** (`number.[device_name]_maximum_temperature`) - Set maximum operating temperature (0-40°C)
+- **Ventilation Duration** (`number.[device_name]_ventilation_duration`) - Set ventilation duration (0-99 min)
+- **Break Duration** (`number.[device_name]_break_duration`) - Set break duration (0-90 min)
+- **Target Humidity** (`number.[device_name]_target_humidity`) - Set target humidity (10-90%)
+- **Humidity Difference** (`number.[device_name]_humidity_difference`) - Set humidity difference threshold (0.0-5.0 g/m³)
 
 ### Time Controls
-- **Working Hours Start** (`time.fals22_working_hours_start`) - Set daily operation start time
-- **Working Hours End** (`time.fals22_working_hours_end`) - Set daily operation end time
+- **Working Hours Start** (`time.[device_name]_working_hours_start`) - Set daily operation start time
+- **Working Hours End** (`time.[device_name]_working_hours_end`) - Set daily operation end time
 
 ## Services
 
